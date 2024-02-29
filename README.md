@@ -24,3 +24,5 @@ Simple stuff like this let me bypass what shell VSCode would open. Just going st
 many others doesn't matter now.
 
 I hope to get all of the functionality i want essentially prototyped in PowerShell by invoking the Python library and then taking all that into its own self-contained thing in Go or Rust or something that can easily spit out binaries that can run on my PC and my Mac.
+
+[The things I'm working on live in here](https://github.com/navjack/python-kasa/tree/master/powershellscripts)
