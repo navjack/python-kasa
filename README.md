@@ -17,11 +17,11 @@ Write-Host $bulbcolorchangecmd
 Invoke-Expression -Command $bulbcolorchangecmd
 ```
 
-Simple stuff like this let me bypass what shell VSCode would open. Just going straight to ZSH which has Python-Kasa running happily in it (is it the Brew version? or one of the other...
+Simple stuff like this let me bypass what shell VSCode would open. Just going straight to ZSH which has Python-Kasa running happily in it instead of having to wonder if it is the Brew version, or one of the other...
 
 <img width="606" alt="Screenshot 2024-02-28 at 10 22 57 PM" src="https://github.com/navjack/python-kasa/assets/7362750/d037f254-c867-4949-a8a9-9755c842e95a">
 
-many others doesn't matter now.
+many many other ones doesn't matter now.
 
 I hope to get all of the functionality i want essentially prototyped in PowerShell by invoking the Python library and then taking all that into its own self-contained thing in Go or Rust or something that can easily spit out binaries that can run on my PC and my Mac.
 
