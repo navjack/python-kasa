@@ -1,27 +1,27 @@
 # this is the start of the command to change settings on the kasa smart bulbs by communicating with the host IP address of the device
-$commandstart = "kasa --host "
+$commandstart = 'kasa --host '
 
 # this is the always used part of the command that sets the device type to bulb
-$typebulb = "--type bulb "
+$typebulb = '--type bulb '
 
-$transitioncmd = " --transition "
+$transitioncmd = ' --transition '
 
-$transitiontime = "0 "
+$transitiontime = '0 '
 
 # this is the variable that sets the brightness of the bulb to 100% by default
-$brightness = "100 "
+$brightness = '100 '
 
 # set variable for the host IP address of the "RGB Bedroom" bulb type device and call it $bedroomip
-$bedroomip = "192.168.2.7 "
+$bedroomip = '192.168.2.7 '
 
 # set variable for the host IP address of the "rgb living room" bulb type device and call it $livingroomip
-$livingroomip = "192.168.2.8 "
+$livingroomip = '192.168.2.8 '
 
 # set variable for the host IP address of the "lampshade" bulb type device and call it $lampshadeip
-$lampshadeip = "192.168.2.6 "
+$lampshadeip = '192.168.2.6 '
 
 # ask the user which bulb they would like to change the color of. 1 for "RGB Bedroom", 2 for "rgb living room", 3 for "lampshade"
-$bulb = Read-Host "Which bulb would you like to change the color of? 1 for RGB Bedroom, 2 for rgb living room, 3 for lampshade"
+$bulb = Read-Host 'Which bulb would you like to change the color of? 1 for RGB Bedroom, 2 for rgb living room, 3 for lampshade'
 
 # if the user enters 1 then set the variable called $bulbip to the $bedroomip variable. if the user enters 2 then set the variable called $bulbip to the $livingroomip variable. if the user enters 3 then set the variable called $bulbip to the $lampshadeip variable.
 if ($bulb -eq 1)
@@ -38,26 +38,26 @@ elseif ($bulb -eq 3)
 }
 
 # ask the user for space separated RGB values they would like to set the bulb to
-$rgb = Read-Host "Enter RGB values separated by spaces"
+$rgb = Read-Host 'Enter RGB values separated by spaces'
 
 # ask the user if they would like to set the brightness of the bulb. 1 for yes, 2 for no. if the user enters 1 then ask them for the brightness value they would like to set the bulb to. if the user enters 2 then set the brightness variable to 100.
-$brightnessquestion = Read-Host "Would you like to set the brightness of the bulb? 1 for yes, 2 for no."
+$brightnessquestion = Read-Host 'Would you like to set the brightness of the bulb? 1 for yes, 2 for no.'
 if ($brightnessquestion -eq 1)
 {
-    $brightness = Read-Host "Enter a brightness value between 0 and 100"
+    $brightness = Read-Host 'Enter a brightness value between 0 and 100'
     # if there isn't a space at the end of the brightness value then add one
-    if ($brightness.Substring($brightness.Length - 1) -ne " ")
+    if ($brightness.Substring($brightness.Length - 1) -ne ' ')
     {
-        $brightness = $brightness + " "
+        $brightness = $brightness + ' '
     }
 }
 elseif ($brightnessquestion -eq 2)
 {
-    $brightness = "100 "
+    $brightness = '100 '
 }
 
 # split the space seperated RGB values into individual variables
-$red, $green, $blue = $rgb.Split(" ")
+$red, $green, $blue = $rgb.Split(' ')
 # write host the RGB values to see what they look like
 Write-Host "RGB values: $($red) $($green) $($blue)"
 
@@ -206,53 +206,277 @@ Write-Host $bulbcolorchangecmd
 # run $bulbcolorchangecmd in the macos zsh shell
 Invoke-Expression -Command $bulbcolorchangecmd
 
-# ask the user if they would like to apply the same color to the other bulbs. 1 for yes, 2 for no.
-$applytoallotherbulbs = Read-Host "Would you like to apply the same color to the other bulbs? 1 for yes, 2 for no."
+# ask the user if they would like to manually change the color of any of the three bulbs. 1 for yes, 2 for no. if the user enters 1 then ask them which bulb they would like to change the color of. if the user enters 2 then move on to the next question.
 
-# if the user enters 1 then read $bulb and if it is 1 then set $bulbip to $livingroomip and if it is 2 then set $bulbip to $lampshadeip and if it is 3 then set $bulbip to $bedroomip. for each of these if they are true then put together the variables to form $bulbcolorchangecmd and run it. and after that run one more iteration of this loop to change the color of the last bulb. if the user enters 2 then do nothing.
-if ($applytoallotherbulbs -eq 1)
+$manualcolorchange = Read-Host 'Would you like to manually change the color of any of the three bulbs? 1 for yes, 2 for no.'
+
+if ($manualcolorchange -eq 1)
 {
+    $bulb = Read-Host 'Which bulb would you like to change the color of? 1 for RGB Bedroom, 2 for rgb living room, 3 for lampshade'
     if ($bulb -eq 1)
     {
-        $bulbip = $livingroomip
-        $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
-        Write-Host $bulbcolorchangecmd
-        Invoke-Expression -Command $bulbcolorchangecmd
-        $bulbip = $lampshadeip
-        $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
-        Write-Host $bulbcolorchangecmd
-        Invoke-Expression -Command $bulbcolorchangecmd
+        $bulbip = $bedroomip
     }
     elseif ($bulb -eq 2)
     {
-        $bulbip = $lampshadeip
-        $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
-        Write-Host $bulbcolorchangecmd
-        Invoke-Expression -Command $bulbcolorchangecmd
-        $bulbip = $bedroomip
-        $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
-        Write-Host $bulbcolorchangecmd
-        Invoke-Expression -Command $bulbcolorchangecmd
+        $bulbip = $livingroomip
     }
     elseif ($bulb -eq 3)
     {
-        $bulbip = $bedroomip
-        $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
-        Write-Host $bulbcolorchangecmd
-        Invoke-Expression -Command $bulbcolorchangecmd
-        $bulbip = $livingroomip
-        $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
-        Write-Host $bulbcolorchangecmd
-        Invoke-Expression -Command $bulbcolorchangecmd
+        $bulbip = $lampshadeip
     }
-    if ($applytoallotherbulbs -eq 2)
+    $rgb = Read-Host 'Enter RGB values separated by spaces'
+    $brightnessquestion = Read-Host 'Would you like to set the brightness of the bulb? 1 for yes, 2 for no.'
+    if ($brightnessquestion -eq 1)
     {
-        Write-Host "Ok, I won't change the color of the other bulbs."
+        $brightness = Read-Host 'Enter a brightness value between 0 and 100'
+        if ($brightness.Substring($brightness.Length - 1) -ne ' ')
+        {
+            $brightness = $brightness + ' '
+        }
     }
+    elseif ($brightnessquestion -eq 2)
+    {
+        $brightness = '100 '
+    }
+    $red, $green, $blue = $rgb.Split(' ')
+    Write-Host "RGB values: $($red) $($green) $($blue)"
+    $red = [float]($red / 255)
+    $green = [float]($green / 255)
+    $blue = [float]($blue / 255)
+    Write-Host "RGB values: $($red) $($green) $($blue)"
+    $cmin = ($red, $green, $blue | Measure-Object -Minimum).Minimum
+    $cmax = ($red, $green, $blue | Measure-Object -Maximum).Maximum
+    if (-not $cmin -or $cmin -ne $cmin)
+    {
+        $cmin = 0
+    }
+    if (-not $cmax -or $cmax -ne $cmax)
+    {
+        $cmax = 1
+    }
+    Write-Host "cmin: $($cmin)"
+    Write-Host "cmax: $($cmax)"
+    $delta = $cmax - $cmin
+    Write-Host "delta: $($delta)"
+    if ($delta -eq 0)
+    {
+        $hue = 0
+    }
+    elseif ($cmax -eq $red)
+    {
+        $hue = 60 * ((($green - $blue) / $delta) % 6)
+    }
+    elseif ($cmax -eq $green)
+    {
+        $hue = 60 * ((($blue - $red) / $delta) + 2)
+    }
+    elseif ($cmax -eq $blue)
+    {
+        $hue = 60 * ((($red - $green) / $delta) + 4)
+    }
+    if ($null -eq $hue -or $hue -ne $hue)
+    {
+        $hue = 0
+    }
+    Write-Host "hue: $($hue)"
+    if ($cmax -eq 0)
+    {
+        $saturation = 0
+    }
+    else
+    {
+        $saturation = $delta / $cmax
+    }
+    if ($red -eq 1 -and $green -eq 1 -and $blue -eq 1)
+    {
+        $saturation = 0
+    }
+    if ($red -eq $green -and $red -eq $blue)
+    {
+        $saturation = 0
+    }
+    Write-Host "saturation: $($saturation)"
+    if ($cmax -eq 0)
+    {
+        $value = 0
+    }
+    else
+    {
+        $value = $cmax
+        if ($value -gt 1)
+        {
+            $value = 1
+        }
+    }
+    Write-Host "value: $($value)"
+    $hue = [math]::Round($hue)
+    Write-Host "hue: $($hue)"
+    if ($hue -lt 0)
+    {
+        $hue = $hue + 360
+    }
+    if ($hue -gt 360)
+    {
+        $hue = 360
+    }
+    Write-Host "hue: $($hue)"
+    $saturation = [math]::Round($saturation * 100)
+    Write-Host "saturation: $($saturation)"
+    $value = [math]::Round($value * 100)
+    Write-Host "value: $($value)"
+    if ($brightnessquestion -eq 1)
+    {
+        $value = $brightness
+    }
+    elseif ($brightnessquestion -eq 2)
+    {
+        $value = 100
+    }
+    Write-Host "HSV values: $($hue) $($saturation) $($value)"
+    $hsvcmd = "hsv $($hue) $($saturation) $($value)"
+    $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
+    Write-Host $bulbcolorchangecmd
+    Invoke-Expression -Command $bulbcolorchangecmd
+}
+
+# ask the user if they would like to change the color of another bulb. 1 for yes, 2 for no.
+$changeanotherbulb = Read-Host 'Would you like to change the color of another bulb? 1 for yes, 2 for no.'
+
+# if the user enters 1 then ask them which bulb they would like to change the color of. if the user enters 2 then move on to the next question.
+if ($changeanotherbulb -eq 1)
+{
+    $bulb = Read-Host 'Which bulb would you like to change the color of? 1 for RGB Bedroom, 2 for rgb living room, 3 for lampshade'
+    if ($bulb -eq 1)
+    {
+        $bulbip = $bedroomip
+    }
+    elseif ($bulb -eq 2)
+    {
+        $bulbip = $livingroomip
+    }
+    elseif ($bulb -eq 3)
+    {
+        $bulbip = $lampshadeip
+    }
+    $rgb = Read-Host 'Enter RGB values separated by spaces'
+    $brightnessquestion = Read-Host 'Would you like to set the brightness of the bulb? 1 for yes, 2 for no.'
+    if ($brightnessquestion -eq 1)
+    {
+        $brightness = Read-Host 'Enter a brightness value between 0 and 100'
+        if ($brightness.Substring($brightness.Length - 1) -ne ' ')
+        {
+            $brightness = $brightness + ' '
+        }
+    }
+    elseif ($brightnessquestion -eq 2)
+    {
+        $brightness = '100 '
+    }
+    $red, $green, $blue = $rgb.Split(' ')
+    Write-Host "RGB values: $($red) $($green) $($blue)"
+    $red = [float]($red / 255)
+    $green = [float]($green / 255)
+    $blue = [float]($blue / 255)
+    Write-Host "RGB values: $($red) $($green) $($blue)"
+    $cmin = ($red, $green, $blue | Measure-Object -Minimum).Minimum
+    $cmax = ($red, $green, $blue | Measure-Object -Maximum).Maximum
+    if (-not $cmin -or $cmin -ne $cmin)
+    {
+        $cmin = 0
+    }
+    if (-not $cmax -or $cmax -ne $cmax)
+    {
+        $cmax = 1
+    }
+    Write-Host "cmin: $($cmin)"
+    Write-Host "cmax: $($cmax)"
+    $delta = $cmax - $cmin
+    Write-Host "delta: $($delta)"
+    if ($delta -eq
+        0)
+    {
+        $hue = 0
+    }
+    elseif ($cmax -eq $red)
+    {
+        $hue = 60 * ((($green - $blue) / $delta) % 6)
+    }
+    elseif ($cmax -eq $green)
+    {
+        $hue = 60 * ((($blue - $red) / $delta) + 2)
+    }
+    elseif ($cmax -eq $blue)
+    {
+        $hue = 60 * ((($red - $green) / $delta) + 4)
+    }
+    if ($null -eq $hue -or $hue -ne $hue)
+    {
+        $hue = 0
+    }
+    Write-Host "hue: $($hue)"
+    if ($cmax -eq 0)
+    {
+        $saturation = 0
+    }
+    else
+    {
+        $saturation = $delta / $cmax
+    }
+    if ($red -eq 1 -and $green -eq 1 -and $blue -eq 1)
+    {
+        $saturation = 0
+    }
+    if ($red -eq $green -and $red -eq $blue)
+    {
+        $saturation = 0
+    }
+    Write-Host "saturation: $($saturation)"
+    if ($cmax -eq 0)
+    {
+        $value = 0
+    }
+    else
+    {
+        $value = $cmax
+        if ($value -gt 1)
+        {
+            $value = 1
+        }
+    }
+    Write-Host "value: $($value)"
+    $hue = [math]::Round($hue)
+    Write-Host "hue: $($hue)"
+    if ($hue -lt 0)
+    {
+        $hue = $hue + 360
+    }
+    if ($hue -gt 360)
+    {
+        $hue = 360
+    }
+    Write-Host "hue: $($hue)"
+    $saturation = [math]::Round($saturation * 100)
+    Write-Host "saturation: $($saturation)"
+    $value = [math]::Round($value * 100)
+    Write-Host "value: $($value)"
+    if ($brightnessquestion -eq 1)
+    {
+        $value = $brightness
+    }
+    elseif ($brightnessquestion -eq 2)
+    {
+        $value = 100
+    }
+    Write-Host "HSV values: $($hue) $($saturation) $($value)"
+    $hsvcmd = "hsv $($hue) $($saturation) $($value)"
+    $bulbcolorchangecmd = $commandstart + $bulbip + $typebulb + $hsvcmd
+    Write-Host $bulbcolorchangecmd
+    Invoke-Expression -Command $bulbcolorchangecmd
 }
 
 # ask the user if they want party mode. 1 for all bulbs, 2 for single bulb, 3 for no party mode.
-$partymode = Read-Host "Would you like party mode? 1 for all bulbs, 2 for single bulb, 3 for no party mode."
+$partymode = Read-Host 'Would you like party mode? 1 for all bulbs, 2 for single bulb, 3 for no party mode.'
 
 if ($partymode -eq 1)
 {
@@ -279,7 +503,7 @@ if ($partymode -eq 1)
 }
 elseif ($partymode -eq 2)
 {
-    $bulb = Read-Host "Which bulb would you like to activate party mode? 1 for living room, 2 for lampshade, 3 for bedroom."
+    $bulb = Read-Host 'Which bulb would you like to activate party mode? 1 for living room, 2 for lampshade, 3 for bedroom.'
     $hueIncrement = 2
     $saturation = 100
     $value = 25
