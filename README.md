@@ -29,7 +29,7 @@ Invoke-Expression -Command $bulbcolorchangecmd
 </p>
 
 <p align="center">
-  many many other ones doesn't matter now.
+  many many other python installs doesn't matter now.
 </p>
 
 <p align="center">
